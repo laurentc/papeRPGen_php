@@ -1,0 +1,19 @@
+<html>
+<head>
+
+</head>
+<body>
+<div>
+    <a href="{{ path('accueil') }}">Accueil</a>
+    {{ app.user.username }}
+    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+        <a href="{{ path('logout') }}">Se deconnecter</a>
+    {% else %}
+        <a href="{{ path('login') }}">Se connecter</a>
+    {% endif %}
+</div>
+<div id="content">
+    {% block body %}{% endblock %}
+</div>
+</body>
+</html>

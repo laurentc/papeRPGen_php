@@ -6,30 +6,36 @@ security:
     providers:
         in_memory:
             memory: ~
-        app_provider:
+        in_bdd:
             entity:
                 class: AppBundle:User
-                property: username
 
     firewalls:
         # disables authentication for assets and the profiler, adapt it according to your needs
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-        main:
-            anonymous: ~
 
         admin:
-            pattern: /admin
-            provider: app_provider
+            pattern: ^/admin
+            provider: in_bdd
             # activate different ways to authenticate
 
-            http_basic: ~
+#            http_basic: ~
             # http://symfony.com/doc/current/book/security.html#a-configuring-how-your-users-will-authenticate
 
-            #form_login: ~
+            form_login:
+                login_path: login
+                check_path: login
             # http://symfony.com/doc/current/cookbook/security/form_login_setup.html
+            logout:
+                path:   /logout
+                target: /
 
     encoders:
         AppBundle\Entity\User:
             algorithm: bcrypt
+
+    access_control:
+        # require ROLE_ADMIN for /admin*
+        - { path: ^/admin, roles: ROLE_ADMIN }

@@ -14,6 +14,7 @@ use AppBundle\Form\UserType;
 use AppBundle\Form\UserLoginType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class SecurityController extends Controller{
@@ -26,9 +27,18 @@ class SecurityController extends Controller{
      */
     public function loginAction(Request $request)
     {
-        $form = $this->createForm(UserLoginType::class);
+        $authenticationUtils = $this->get('security.authentication_utils');
 
-        return $this->render('Security/login.html.twig', ['form' => $form->createView()]);
+        // get the login error if there is one
+        $error = $authenticationUtils->getLastAuthenticationError();
+
+        // last username entered by the user
+        $lastUsername = $authenticationUtils->getLastUsername();
+
+        return $this->render('security/login.html.twig', array(
+            'last_username' => $lastUsername,
+            'error'         => $error,
+        ));
     }
 
     /**
@@ -56,6 +66,17 @@ class SecurityController extends Controller{
             $this->redirectToRoute('login');
         }
 
-        return $this->render('Security/register.html.twig', ['form' => $form->createView()]);
+        return $this->render('security/register.html.twig', ['form' => $form->createView()]);
+    }
+
+    /**
+     * @Route("/logout", name = "logout")
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function logout(Request $request)
+    {
+        return $this->redirectToRoute('accueil');
     }
 } 

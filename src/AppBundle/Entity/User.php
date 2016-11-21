@@ -28,9 +28,9 @@ class User implements UserInterface, \Serializable
     /**
      * @var string
      *
-     * @ORM\Column(name="user_name", type="string", length=255)
+     * @ORM\Column(name="username", type="string", length=255)
      */
-    private $userName;
+    private $username;
 
     /**
      * @var string
@@ -89,27 +89,27 @@ class User implements UserInterface, \Serializable
     }
 
     /**
-     * Set userName
+     * Set username
      *
-     * @param string $userName
+     * @param string $username
      *
      * @return User
      */
-    public function setUserName($userName)
+    public function setUsername($username)
     {
-        $this->userName = $userName;
+        $this->username = $username;
 
         return $this;
     }
 
     /**
-     * Get userName
+     * Get username
      *
      * @return string
      */
-    public function getUserName()
+    public function getUsername()
     {
-        return $this->userName;
+        return $this->username;
     }
 
     /**
@@ -192,14 +192,7 @@ class User implements UserInterface, \Serializable
      */
     public function serialize()
     {
-        $tmp = [
-            'username' => $this->userName,
-            'password' => $this->password,
-            'id' => $this->id,
-            'email' => $this->email
-        ];
-
-        return serialize($tmp);
+        return serialize(['id' => $this->getId()]);
     }
 
     /**
@@ -213,7 +206,8 @@ class User implements UserInterface, \Serializable
      */
     public function unserialize($serialized)
     {
-        list($this->userName, $this->password, $this->id, $this->email) = unserialize($serialized);
+        $tmp = unserialize($serialized);
+        $this->id = $tmp['id'];
     }
 
     /**
@@ -234,7 +228,7 @@ class User implements UserInterface, \Serializable
      */
     public function getRoles()
     {
-        // TODO: Implement getRoles() method.
+        return ['ROLE_ADMIN'];
     }
 
     /**
@@ -246,7 +240,7 @@ class User implements UserInterface, \Serializable
      */
     public function getSalt()
     {
-        // TODO: Implement getSalt() method.
+        return null;
     }
 
     /**
@@ -257,7 +251,7 @@ class User implements UserInterface, \Serializable
      */
     public function eraseCredentials()
     {
-        // TODO: Implement eraseCredentials() method.
+        $this->setPlainPassword(null);
     }
 }
 
