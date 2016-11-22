@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Aventure
@@ -10,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="aventure")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\AventureRepository")
  */
-class Aventure
+class Aventure implements \JsonSerializable
 {
     /**
      * @var int
@@ -24,9 +25,10 @@ class Aventure
     /**
      * @var string
      *
-     * @ORM\Column(name="avt_label", type="string", length=255)
+     * @ORM\Column(name="label", type="string", length=255)
+     * @Assert\NotBlank()
      */
-    private $avtLabel;
+    private $label;
 
 
     /**
@@ -40,51 +42,42 @@ class Aventure
     }
 
     /**
-     * Set avtId
+     * Set label
      *
-     * @param integer $avtId
+     * @param $label
      *
      * @return Aventure
      */
-    public function setAvtId($avtId)
+    public function setLabel($label)
     {
-        $this->avtId = $avtId;
+        $this->label = $label;
 
         return $this;
     }
 
     /**
-     * Get avtId
-     *
-     * @return int
-     */
-    public function getAvtId()
-    {
-        return $this->avtId;
-    }
-
-    /**
-     * Set avtLabel
-     *
-     * @param string $avtLabel
-     *
-     * @return Aventure
-     */
-    public function setAvtLabel($avtLabel)
-    {
-        $this->avtLabel = $avtLabel;
-
-        return $this;
-    }
-
-    /**
-     * Get avtLabel
+     * Get label
      *
      * @return string
      */
-    public function getAvtLabel()
+    public function getLabel()
     {
-        return $this->avtLabel;
+        return $this->label;
+    }
+
+    /**
+     * (PHP 5 &gt;= 5.4.0)<br/>
+     * Specify data which should be serialized to JSON
+     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by <b>json_encode</b>,
+     * which is a value of any type other than a resource.
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->getId(),
+            'label' => $this->getLabel(),
+        ];
     }
 }
 
